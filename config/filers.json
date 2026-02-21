@@ -1,0 +1,18 @@
+{
+  "filers": [
+    {
+      "name": "nfs1",
+      "type": "HNAS",
+      "host": "192.168.56.10",
+      "target_folder": "/HNAS/",
+      "mount_options": "ro,soft,vers=3"
+    },
+    {
+      "name": "nfs2",
+      "type": "NetApp",
+      "host": "192.168.56.11",
+      "target_folder": "/NetApp/",
+      "mount_options": "ro,soft,vers=3"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "enabled": true,
+  "recipients": [],
+  "warning_threshold": 80,
+  "critical_threshold": 90,
+  "snapshot_time": "05:00"
+}

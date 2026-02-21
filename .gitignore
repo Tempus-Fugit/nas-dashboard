@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build output
+client/dist/
+
+# Database (runtime data)
+logs/snapshots.db
+
+# Environment
+.env
+
+# Config cache (runtime, not committed)
+config/new_exports_cache.json
+
+# OS
+.DS_Store
+Thumbs.db
