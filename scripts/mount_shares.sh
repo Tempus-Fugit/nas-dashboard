@@ -108,6 +108,10 @@ build_mountpoint() {
 # ─────────────────────────────────────────────────────────────────────────────
 if [ "${DISCOVER}" = "true" ]; then
   log "Running showmount discovery against all filers ..."
+  FILER_DATA=$(parse_filers) || {
+    log "ERROR: Failed to parse filers.json — check for JSON syntax errors."
+    exit 1
+  }
   while IFS='|' read -r name host target mount_opts; do
     log "  -> showmount -e ${host} (filer: ${name})"
     # showmount timeout handling (mount script --discover mode):
@@ -121,7 +125,7 @@ if [ "${DISCOVER}" = "true" ]; then
         log "    ${line}"
       done <<< "${output}"
     fi
-  done < <(parse_filers)
+  done <<< "${FILER_DATA}"
   log "=== Discovery complete ==="
   exit 0
 fi
@@ -133,11 +137,15 @@ declare -A FILER_HOST
 declare -A FILER_TARGET
 declare -A FILER_OPTS
 
+FILER_DATA=$(parse_filers) || {
+  log "ERROR: Failed to parse filers.json — check for JSON syntax errors."
+  exit 1
+}
 while IFS='|' read -r name host target mount_opts; do
   FILER_HOST["${name}"]="${host}"
   FILER_TARGET["${name}"]="${target}"
   FILER_OPTS["${name}"]="${mount_opts}"
-done < <(parse_filers)
+done <<< "${FILER_DATA}"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # ── UNMOUNT ALL mode ──────────────────────────────────────────────────────────
@@ -147,6 +155,10 @@ if [ "${UNMOUNT_ALL}" = "true" ]; then
   UNMOUNT_OK=0
   UNMOUNT_FAIL=0
 
+  SHARE_DATA=$(parse_shares) || {
+    log "ERROR: Failed to parse shares.json — check for JSON syntax errors."
+    exit 1
+  }
   while IFS='|' read -r filer_name export_path; do
     target="${FILER_TARGET[${filer_name}]:-}"
     if [ -z "${target}" ]; then
@@ -171,7 +183,7 @@ if [ "${UNMOUNT_ALL}" = "true" ]; then
         (( UNMOUNT_FAIL++ ))
       fi
     fi
-  done < <(parse_shares)
+  done <<< "${SHARE_DATA}"
 
   log "=== Unmount complete: ${UNMOUNT_OK} succeeded, ${UNMOUNT_FAIL} failed ==="
   exit 0
@@ -185,6 +197,10 @@ SUCCEEDED=0
 SKIPPED=0
 FAILED=0
 
+SHARE_DATA=$(parse_shares) || {
+  log "ERROR: Failed to parse shares.json — check for JSON syntax errors."
+  exit 1
+}
 while IFS='|' read -r filer_name export_path; do
   target="${FILER_TARGET[${filer_name}]:-}"
   host="${FILER_HOST[${filer_name}]:-}"
@@ -234,7 +250,7 @@ while IFS='|' read -r filer_name export_path; do
     fi
   fi
 
-done < <(parse_shares)
+done <<< "${SHARE_DATA}"
 
 log "=== Mount run complete: ${ATTEMPTED} attempted, ${SUCCEEDED} succeeded, ${SKIPPED} skipped, ${FAILED} failed ==="
 
