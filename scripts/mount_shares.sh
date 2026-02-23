@@ -61,8 +61,12 @@ fi
 # ── Dependency: node must be available for JSON parsing ───────────────────────
 # Source nvm if available
 if [ -s "${HOME}/.nvm/nvm.sh" ]; then
+  # nvm.sh runs in the current shell; set +e prevents any internal nvm
+  # command failure from triggering set -e in this script.
+  set +e
   # shellcheck source=/dev/null
-  source "${HOME}/.nvm/nvm.sh" 2>/dev/null || true
+  source "${HOME}/.nvm/nvm.sh" 2>/dev/null
+  set -e
 fi
 
 if ! command -v node &>/dev/null; then
