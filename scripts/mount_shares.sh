@@ -44,9 +44,9 @@ log() {
 mkdir -p "$(dirname "${LOG_FILE}")" 2>/dev/null || true
 
 log "=== mount_shares.sh started ==="
-[ "${DRY_RUN}"     = "true" ] && log "MODE: dry-run (no mounts will be executed)"
-[ "${UNMOUNT_ALL}" = "true" ] && log "MODE: unmount-all"
-[ "${DISCOVER}"    = "true" ] && log "MODE: discover"
+if [ "${DRY_RUN}"     = "true" ]; then log "MODE: dry-run (no mounts will be executed)"; fi
+if [ "${UNMOUNT_ALL}" = "true" ]; then log "MODE: unmount-all"; fi
+if [ "${DISCOVER}"    = "true" ]; then log "MODE: discover"; fi
 
 # ── Guard: config files must exist ────────────────────────────────────────────
 if [ ! -f "${FILERS_JSON}" ]; then
@@ -181,10 +181,10 @@ if [ "${UNMOUNT_ALL}" = "true" ]; then
     else
       log "  Unmounting: ${mountpoint}"
       if umount "${mountpoint}" 2>&1 | tee -a "${LOG_FILE}"; then
-        (( UNMOUNT_OK++ ))
+        (( UNMOUNT_OK++ )) || true
       else
         log "  FAIL: umount ${mountpoint}"
-        (( UNMOUNT_FAIL++ ))
+        (( UNMOUNT_FAIL++ )) || true
       fi
     fi
   done <<< "${SHARE_DATA}"
@@ -212,18 +212,18 @@ while IFS='|' read -r filer_name export_path; do
 
   if [ -z "${target}" ] || [ -z "${host}" ]; then
     log "  SKIP: Filer '${filer_name}' not found in filers.json (export: ${export_path})"
-    (( SKIPPED++ ))
+    (( SKIPPED++ )) || true
     continue
   fi
 
   mountpoint=$(build_mountpoint "${target}" "${export_path}")
-  (( ATTEMPTED++ ))
+  (( ATTEMPTED++ )) || true
 
   # Skip if already mounted (idempotent)
   if mount | grep -q " ${mountpoint} "; then
     log "  SKIP (already mounted): ${mountpoint}"
-    (( SKIPPED++ ))
-    (( ATTEMPTED-- ))
+    (( SKIPPED++ )) || true
+    (( ATTEMPTED-- )) || true
     continue
   fi
 
@@ -241,16 +241,16 @@ while IFS='|' read -r filer_name export_path; do
 
   if [ "${DRY_RUN}" = "true" ]; then
     log "  DRY-RUN: ${MOUNT_CMD}"
-    (( SUCCEEDED++ ))
+    (( SUCCEEDED++ )) || true
   else
     log "  Mounting: ${host}:${export_path} → ${mountpoint}"
     # Each mount attempt is wrapped individually. Failure logs and continues.
     if eval "${MOUNT_CMD}" 2>&1 | tee -a "${LOG_FILE}"; then
       log "  OK: ${mountpoint}"
-      (( SUCCEEDED++ ))
+      (( SUCCEEDED++ )) || true
     else
       log "  FAIL: mount ${host}:${export_path} → ${mountpoint}"
-      (( FAILED++ ))
+      (( FAILED++ )) || true
     fi
   fi
 
