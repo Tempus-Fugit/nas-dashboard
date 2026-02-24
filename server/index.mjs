@@ -1,19 +1,23 @@
-'use strict';
-// server/index.js – NAS Monitoring Dashboard Express server.
-// Serves the REST API for the React frontend.
+// server/index.mjs – NAS Monitoring Dashboard Express server.
+// Serves the REST API and built React frontend.
 // Starts the mount watcher and daily snapshot cron on startup.
 
-const express = require('express');
-const cors    = require('cors');
-const path    = require('path');
+import express from 'express';
+import cors    from 'cors';
+import path    from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-const mountsRouter  = require('./routes/mounts');
-const browseRouter  = require('./routes/browse');
-const trendsRouter  = require('./routes/trends');
-const configRouter  = require('./routes/config');
+import mountsRouter  from './routes/mounts.mjs';
+import browseRouter  from './routes/browse.mjs';
+import trendsRouter  from './routes/trends.mjs';
+import configRouter  from './routes/config.mjs';
 
-const { start: startMountWatcher } = require('./services/mountWatcher');
-const { startSnapshotJob }         = require('./services/snapshotJob');
+import { start as startMountWatcher } from './services/mountWatcher.mjs';
+import { startSnapshotJob }           from './services/snapshotJob.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const PORT = process.env.PORT || 3001;
 
@@ -44,9 +48,18 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', ts: new Date().toISOString() });
 });
 
-// ── 404 handler ────────────────────────────────────────────────────────────────
-app.use((req, res) => {
+// ── API 404 handler ────────────────────────────────────────────────────────────
+app.use('/api', (req, res) => {
   res.status(404).json({ error: `Not found: ${req.method} ${req.path}` });
+});
+
+// ── Static frontend (production) ───────────────────────────────────────────────
+const clientDist = path.join(__dirname, '../client/dist');
+app.use(express.static(clientDist));
+
+// SPA fallback – serve index.html for all non-API routes (React Router)
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(clientDist, 'index.html'));
 });
 
 // ── Error handler ──────────────────────────────────────────────────────────────
@@ -65,5 +78,3 @@ app.listen(PORT, '0.0.0.0', () => {
   // Start daily snapshot cron
   startSnapshotJob();
 });
-
-module.exports = app;

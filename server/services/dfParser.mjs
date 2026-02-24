@@ -1,8 +1,7 @@
-'use strict';
-// services/dfParser.js – Runs `df -k` against a mountpoint and parses output.
+// services/dfParser.mjs – Runs `df -k` against a mountpoint and parses output.
 // Returns structured disk usage data.
 
-const { execFile } = require('child_process');
+import { execFile } from 'child_process';
 
 /**
  * Run `df -k` on a single mountpoint and parse the result.
@@ -83,4 +82,4 @@ function dfAll(mountpoints) {
   });
 }
 
-module.exports = { dfSingle, dfAll };
+export { dfSingle, dfAll };

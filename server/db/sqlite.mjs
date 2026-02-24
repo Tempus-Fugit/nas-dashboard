@@ -1,10 +1,14 @@
-'use strict';
-// db/sqlite.js – SQLite database initialization and snapshot query helpers.
+// db/sqlite.mjs – SQLite database initialization and snapshot query helpers.
 // Uses better-sqlite3 for synchronous access (safe in a single-process Node app).
 
-const Database = require('better-sqlite3');
-const path = require('path');
-const fs = require('fs');
+import Database from 'better-sqlite3';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const DB_DIR = path.join(__dirname, '../../logs');
 const DB_PATH = path.join(DB_DIR, 'snapshots.db');
@@ -114,7 +118,7 @@ function getExportTrends(filer, exportPath, days = 180) {
   return selectExportTrends.all(filer, exportPath, interval);
 }
 
-module.exports = {
+export {
   db,
   insertSnapshotTx,
   insertManySnapshots,

@@ -1,8 +1,7 @@
-'use strict';
-// services/emailService.js – Daily alert email for Warning and Critical exports.
+// services/emailService.mjs – Daily alert email for Warning and Critical exports.
 // Uses nodemailer. Configure SMTP via environment variables or .env file.
 
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
 /**
  * Create a nodemailer transporter from environment config.
@@ -84,4 +83,4 @@ async function sendAlerts(alertEntries, alertsConfig) {
   console.log(`[emailService] Alert email sent to ${alertsConfig.recipients.length} recipients.`);
 }
 
-module.exports = { sendAlerts };
+export { sendAlerts };

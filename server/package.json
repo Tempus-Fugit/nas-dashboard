@@ -2,15 +2,16 @@
   "name": "nas-dashboard-server",
   "version": "1.0.0",
   "description": "NAS Monitoring Dashboard - Node.js/Express backend",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node index.js"
+    "start": "node index.mjs",
+    "dev": "node index.mjs"
   },
   "dependencies": {
     "better-sqlite3": "^9.4.3",
     "cors": "^2.8.5",
     "express": "^4.18.3",
+    "nas-dashboard": "file:..",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.11"
   }

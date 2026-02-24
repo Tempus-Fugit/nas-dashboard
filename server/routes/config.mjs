@@ -1,12 +1,12 @@
-'use strict';
-// routes/config.js – Config management endpoints.
+// routes/config.mjs – Config management endpoints.
 // Filer management, share management, alert settings,
 // export discovery (showmount), and new-export notifications.
 
-const express = require('express');
+import express from 'express';
+import { readConfig, writeConfig, readConfigOrDefault } from '../services/configHelper.mjs';
+import { discoverFiler, discoverAll, getNewExports } from '../services/exportDiscovery.mjs';
+
 const router = express.Router();
-const { readConfig, writeConfig, readConfigOrDefault } = require('../services/configHelper');
-const { discoverFiler, discoverAll, getNewExports } = require('../services/exportDiscovery');
 
 // ── Filer config ─────────────────────────────────────────────────────────────
 
@@ -207,4 +207,4 @@ function _removeFromNewExportsCache(filer, exportPath) {
   }
 }
 
-module.exports = router;
+export default router;

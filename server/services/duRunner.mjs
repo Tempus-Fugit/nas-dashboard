@@ -1,5 +1,4 @@
-'use strict';
-// services/duRunner.js – Directory size (du) and listing (ls) helpers.
+// services/duRunner.mjs – Directory size (du) and listing (ls) helpers.
 //
 // CRITICAL IMPLEMENTATION NOTE for listDirectory:
 // Uses `ls -la --time-style=+%s` which produces 7 columns per line:
@@ -11,8 +10,8 @@
 // Path traversal protection: all paths validated against ALLOWED_ROOTS before
 // any shell command is executed.
 
-const { execFile } = require('child_process');
-const path = require('path');
+import { execFile } from 'child_process';
+import path from 'path';
 
 // Allowed mount roots for path traversal protection (Browse page)
 const ALLOWED_ROOTS = ['/HNAS', '/NetApp'];
@@ -123,4 +122,4 @@ function listDirectory(dirPath) {
   });
 }
 
-module.exports = { getDirSize, listDirectory, isPathAllowed, ALLOWED_ROOTS };
+export { getDirSize, listDirectory, isPathAllowed, ALLOWED_ROOTS };

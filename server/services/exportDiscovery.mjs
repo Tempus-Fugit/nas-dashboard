@@ -1,5 +1,4 @@
-'use strict';
-// services/exportDiscovery.js – Runs showmount -e against all configured filers
+// services/exportDiscovery.mjs – Runs showmount -e against all configured filers
 // and compares results against shares.json and dismissed_exports.json.
 // Stores net-new exports for the Config page notification banner.
 //
@@ -8,9 +7,14 @@
 //   timeout option. On timeout: log the error, skip that filer, continue others.
 //   The Config page endpoint surfaces per-filer timeout errors as inline messages.
 
-const { exec } = require('child_process');
-const path = require('path');
-const { readConfig, writeConfig } = require('./configHelper');
+import { exec } from 'child_process';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import { readConfig, writeConfig } from './configHelper.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const CONFIG_DIR = path.join(__dirname, '../../config');
 
@@ -86,7 +90,6 @@ async function runDiscovery() {
   }
 
   // Write new-exports to a runtime cache file
-  const newExportsPath = path.join(CONFIG_DIR, 'new_exports_cache.json');
   writeConfig('new_exports_cache.json', { newExports, updatedAt: new Date().toISOString() });
 
   console.log(`[exportDiscovery] Discovery complete. ${newExports.length} net-new exports found.`);
@@ -177,4 +180,4 @@ function getNewExports() {
   }
 }
 
-module.exports = { showmount, runDiscovery, discoverFiler, discoverAll, getNewExports };
+export { showmount, runDiscovery, discoverFiler, discoverAll, getNewExports };

@@ -1,11 +1,10 @@
-'use strict';
-// services/mountWatcher.js – Watches /proc/mounts for NFS mount changes.
+// services/mountWatcher.mjs – Watches /proc/mounts for NFS mount changes.
 //
 // Every 60 seconds, reads /proc/mounts and extracts NFS entries.
 // Compares against the previous snapshot to detect additions/removals.
 // Exposes a getStatus() function and a changeVersion counter for polling.
 
-const fs = require('fs');
+import fs from 'fs';
 
 const MOUNTS_FILE = '/proc/mounts';
 const POLL_INTERVAL_MS = 60 * 1000;
@@ -122,4 +121,4 @@ function isMounted(mountpoint) {
   return currentMounts.some(m => m.mountpoint === mountpoint);
 }
 
-module.exports = { start, getStatus, isMounted, readNfsMounts };
+export { start, getStatus, isMounted, readNfsMounts };

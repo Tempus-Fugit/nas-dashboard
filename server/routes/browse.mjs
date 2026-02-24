@@ -1,13 +1,13 @@
-'use strict';
-// routes/browse.js – Filesystem browse and directory size endpoints.
+// routes/browse.mjs – Filesystem browse and directory size endpoints.
 // GET /api/browse?path=       – Directory contents (files + directories)
 // GET /api/browse/size?path=  – Total size of directory via du -sk
 //
 // Path traversal protection: all path params validated against /HNAS and /NetApp.
 
-const express = require('express');
+import express from 'express';
+import { listDirectory, getDirSize, isPathAllowed } from '../services/duRunner.mjs';
+
 const router = express.Router();
-const { listDirectory, getDirSize, isPathAllowed } = require('../services/duRunner');
 
 /**
  * GET /api/browse?path=<dir>
@@ -65,4 +65,4 @@ router.get('/size', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

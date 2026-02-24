@@ -1,11 +1,15 @@
-'use strict';
-// services/configHelper.js – Atomic config file read/write helpers.
+// services/configHelper.mjs – Atomic config file read/write helpers.
 //
 // All config writes use a temp-file-then-rename strategy to prevent
 // partial writes or corruption. Never writes directly to the target file.
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const CONFIG_DIR = path.join(__dirname, '../../config');
 
@@ -51,4 +55,4 @@ function readConfigOrDefault(filename, defaultValue) {
   }
 }
 
-module.exports = { readConfig, writeConfig, readConfigOrDefault, CONFIG_DIR };
+export { readConfig, writeConfig, readConfigOrDefault, CONFIG_DIR };

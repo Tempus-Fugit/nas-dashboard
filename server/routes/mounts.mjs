@@ -1,14 +1,14 @@
-'use strict';
-// routes/mounts.js – Live mount data endpoints.
+// routes/mounts.mjs – Live mount data endpoints.
 // GET /api/mounts        – All configured shares with live df usage
 // GET /api/mounts/status – Mount change detection state (for polling)
 
-const express = require('express');
+import express from 'express';
+import { dfAll } from '../services/dfParser.mjs';
+import { getStatus } from '../services/mountWatcher.mjs';
+import { readConfig } from '../services/configHelper.mjs';
+import { buildMountpoint } from '../services/mountHelper.mjs';
+
 const router = express.Router();
-const { dfAll } = require('../services/dfParser');
-const { getStatus } = require('../services/mountWatcher');
-const { readConfig } = require('../services/configHelper');
-const { buildMountpoint } = require('../services/mountHelper');
 
 /**
  * GET /api/mounts
@@ -86,4 +86,4 @@ router.get('/status', (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,11 +1,11 @@
-'use strict';
-// routes/trends.js – Historical snapshot data for the Trends page.
+// routes/trends.mjs – Historical snapshot data for the Trends page.
 // GET /api/trends?days=180    – All exports, up to N days of history
 // GET /api/trends/:export     – Single export (filer+export as query params)
 
-const express = require('express');
+import express from 'express';
+import { getTrends, getExportTrends } from '../db/sqlite.mjs';
+
 const router = express.Router();
-const { getTrends, getExportTrends } = require('../db/sqlite');
 
 /**
  * GET /api/trends?days=180
@@ -54,4 +54,4 @@ router.get('/:export(*)', (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

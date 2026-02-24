@@ -1,17 +1,16 @@
-'use strict';
-// services/snapshotJob.js – Daily cron job at 05:00.
+// services/snapshotJob.mjs – Daily cron job at 05:00.
 // 1. Records disk usage snapshots into SQLite for all configured exports.
 // 2. Sends alert email for Warning/Critical exports.
 // 3. Runs export discovery and caches new exports.
 // 4. Prunes snapshots older than 180 days.
 
-const cron = require('node-cron');
-const { dfAll } = require('./dfParser');
-const { insertManySnapshots, pruneOldSnapshots } = require('../db/sqlite');
-const { readConfig } = require('./configHelper');
-const { sendAlerts } = require('./emailService');
-const { runDiscovery } = require('./exportDiscovery');
-const { buildMountpoint } = require('./mountHelper');
+import cron from 'node-cron';
+import { dfAll } from './dfParser.mjs';
+import { insertManySnapshots, pruneOldSnapshots } from '../db/sqlite.mjs';
+import { readConfig } from './configHelper.mjs';
+import { sendAlerts } from './emailService.mjs';
+import { runDiscovery } from './exportDiscovery.mjs';
+import { buildMountpoint } from './mountHelper.mjs';
 
 /**
  * Take a snapshot of all configured exports.
@@ -133,4 +132,4 @@ function startSnapshotJob() {
   console.log(`[snapshotJob] Daily snapshot cron scheduled: ${cronExpression}`);
 }
 
-module.exports = { startSnapshotJob, takeSnapshot };
+export { startSnapshotJob, takeSnapshot };

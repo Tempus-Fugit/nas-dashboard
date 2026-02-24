@@ -1,9 +1,8 @@
-'use strict';
-// services/mountHelper.js – Shared utility for building NFS mountpoints.
+// services/mountHelper.mjs – Shared utility for building NFS mountpoints.
 // Mountpoint = target_folder + basename of export path.
 // e.g., target_folder="/HNAS/", export="/exports/engineering" → "/HNAS/engineering"
 
-const path = require('path');
+import path from 'path';
 
 /**
  * Build the local mountpoint path for a given filer target folder and export.
@@ -18,4 +17,4 @@ function buildMountpoint(targetFolder, exportPath) {
   return `${base}/${baseName}`;
 }
 
-module.exports = { buildMountpoint };
+export { buildMountpoint };
