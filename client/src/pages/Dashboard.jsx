@@ -58,9 +58,8 @@ function applySortState(rows, sortKey, sortDir) {
 
 // ── Column definitions ────────────────────────────────────────────────────────
 const COLUMNS = [
-  { key: 'export',       label: 'Export Path'  },
   { key: 'filer',        label: 'Filer'        },
-  { key: 'server',       label: 'Server'       },
+  { key: 'export',       label: 'Export Path'  },
   { key: 'mountpoint',   label: 'Mountpoint'   },
   { key: 'total_kb',     label: 'Total'        },
   { key: 'used_kb',      label: 'Used'         },
@@ -337,14 +336,13 @@ export default function Dashboard() {
                     backgroundColor: isExpanded ? '#f1f5f9' : (idx % 2 === 0 ? '#fff' : '#f8fafc'),
                   }}
                 >
-                  <td style={tdStyle}>{share.export}</td>
                   <td style={tdStyle}>{share.filer}</td>
-                  <td style={tdStyle}>{share.server}</td>
+                  <td style={tdStyle}>{share.export}</td>
                   <td style={{ ...tdStyle, fontFamily: 'monospace', fontSize: '12px' }}>{share.mountpoint || '—'}</td>
-                  <td style={{ ...tdStyle, textAlign: 'right' }}>{formatSize(share.total_kb, unit)}</td>
-                  <td style={{ ...tdStyle, textAlign: 'right' }}>{formatSize(share.used_kb,  unit)}</td>
-                  <td style={{ ...tdStyle, textAlign: 'right' }}>{formatSize(share.free_kb,  unit)}</td>
-                  <td style={{ ...tdStyle, textAlign: 'right' }}>
+                  <td style={{ ...tdStyle, textAlign: 'center' }}>{formatSize(share.total_kb, unit)}</td>
+                  <td style={{ ...tdStyle, textAlign: 'center' }}>{formatSize(share.used_kb,  unit)}</td>
+                  <td style={{ ...tdStyle, textAlign: 'center' }}>{formatSize(share.free_kb,  unit)}</td>
+                  <td style={{ ...tdStyle, textAlign: 'center' }}>
                     {share.percent_used !== null ? `${share.percent_used.toFixed(1)}%` : '—'}
                   </td>
                   <td style={tdStyle}>

@@ -29,7 +29,7 @@ router.get('/', (req, res) => {
  * Returns snapshot history for a single export.
  * :export is URL-encoded export path (e.g. /exports/engineering → %2Fexports%2Fengineering)
  */
-router.get('/:export(*)', (req, res) => {
+router.get('/:export({*splat})', (req, res) => {
   const exportPath = req.params.export || req.query.export;
   const filer = req.query.filer;
   const days = parseInt(req.query.days || '180', 10);
