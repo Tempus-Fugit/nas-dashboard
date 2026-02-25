@@ -343,7 +343,7 @@ export default function Dashboard() {
                   <td style={{ ...tdStyle, textAlign: 'center' }}>{formatSize(share.used_kb,  unit)}</td>
                   <td style={{ ...tdStyle, textAlign: 'center' }}>{formatSize(share.free_kb,  unit)}</td>
                   <td style={{ ...tdStyle, textAlign: 'center' }}>
-                    {share.percent_used !== null ? `${share.percent_used.toFixed(1)}%` : '—'}
+                    {share.percent_used !== null ? `${+share.percent_used.toFixed(1)}%` : '—'}
                   </td>
                   <td style={tdStyle}>
                     <span style={{

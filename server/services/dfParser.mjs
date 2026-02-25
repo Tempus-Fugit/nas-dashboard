@@ -10,7 +10,7 @@ import { execFile } from 'child_process';
  */
 function dfSingle(mountpoint) {
   return new Promise((resolve) => {
-    execFile('df', ['-k', '--output=size,used,avail,pcent', mountpoint], { timeout: 10000 }, (err, stdout) => {
+    execFile('df', ['-k', '--output=size,used,avail', mountpoint], { timeout: 10000 }, (err, stdout) => {
       if (err) {
         resolve(null);
         return;
@@ -31,14 +31,13 @@ function dfSingle(mountpoint) {
       const total_kb = parseInt(parts[0], 10);
       const used_kb  = parseInt(parts[1], 10);
       const free_kb  = parseInt(parts[2], 10);
-      const pctStr   = parts[3].replace('%', '');
-      const percent_used = parseFloat(pctStr);
 
       if (isNaN(total_kb) || isNaN(used_kb) || isNaN(free_kb)) {
         resolve(null);
         return;
       }
 
+      const percent_used = total_kb > 0 ? parseFloat((used_kb / total_kb * 100).toFixed(2)) : 0;
       resolve({ total_kb, used_kb, free_kb, percent_used });
     });
   });
@@ -56,7 +55,7 @@ function dfAll(mountpoints) {
   }
 
   return new Promise((resolve) => {
-    execFile('df', ['-k', '--output=target,size,used,avail,pcent', ...mountpoints], { timeout: 15000 }, (err, stdout) => {
+    execFile('df', ['-k', '--output=target,size,used,avail', ...mountpoints], { timeout: 15000 }, (err, stdout) => {
       const result = new Map();
       if (err) {
         resolve(result);
@@ -66,14 +65,14 @@ function dfAll(mountpoints) {
       // Skip header line
       for (let i = 1; i < lines.length; i++) {
         const parts = lines[i].trim().split(/\s+/);
-        // target size used avail pcent
-        if (parts.length < 5) continue;
+        // target size used avail
+        if (parts.length < 4) continue;
         const mountpoint  = parts[0];
         const total_kb    = parseInt(parts[1], 10);
         const used_kb     = parseInt(parts[2], 10);
         const free_kb     = parseInt(parts[3], 10);
-        const percent_used = parseFloat(parts[4].replace('%', ''));
         if (!isNaN(total_kb)) {
+          const percent_used = total_kb > 0 ? parseFloat((used_kb / total_kb * 100).toFixed(2)) : 0;
           result.set(mountpoint, { total_kb, used_kb, free_kb, percent_used });
         }
       }

@@ -42,8 +42,6 @@ function TreeItem({ node, depth, onToggle, onSelect, selectedPath }) {
   return (
     <div>
       <div
-        onClick={() => node.type === 'file' ? null : onToggle(node)}
-        onDoubleClick={() => onSelect(node)}
         style={{
           display: 'flex',
           alignItems: 'center',
